@@ -2,52 +2,45 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RateLimiter {
-    private final int maxRequests;
-    private final long timeWindowMillis;
-    private long windowStartTime;
-    private AtomicInteger requestCount;
+    private final int maxRequests; // Maximum number of requests allowed in the time window
+    private final long timeWindowMillis; // Time window in milliseconds for the rate limit
+    private long windowStartTime; // Start time of the current time window
+    private AtomicInteger requestCount; // Counter for the number of requests made in the current time window
 
-    /**
-     * Создает новый ограничитель скорости запросов
-     *
-     * @param maxRequests      максимальное количество запросов
-     * @param timeWindowMillis временное окно в миллисекундах
-     */
+    // Creates a new rate limiter for requests
     public RateLimiter(int maxRequests, long timeWindowMillis) {
-        this.maxRequests = maxRequests;
-        this.timeWindowMillis = timeWindowMillis;
-        this.windowStartTime = System.currentTimeMillis();
-        this.requestCount = new AtomicInteger(0);
+        this.maxRequests = maxRequests; // Set the maximum number of requests
+        this.timeWindowMillis = timeWindowMillis; // Set the time window duration
+        this.windowStartTime = System.currentTimeMillis(); // Initialize the start time of the time window
+        this.requestCount = new AtomicInteger(0); // Initialize the request counter
     }
 
-    /**
-     * Ожидает, если необходимо, чтобы не превышать лимит запросов
-     */
+    //Waits if necessary to avoid exceeding the request limit
     public synchronized void acquire() {
-        long currentTime = System.currentTimeMillis();
+        long currentTime = System.currentTimeMillis(); // Get the current time
 
         if (currentTime - windowStartTime >= timeWindowMillis) {
-            // Сбрасываем счетчик и обновляем время начала окна
+            // Reset the counter and update the window start time if the time window has passed
             requestCount.set(0);
-            windowStartTime = currentTime;
+            windowStartTime = currentTime; // Update the start time for the new window
         }
 
         if (requestCount.get() >= maxRequests) {
-            // Вычисляем время ожидания до следующего окна
+            // Calculate the wait time until the next window starts
             long waitTime = timeWindowMillis - (currentTime - windowStartTime);
             System.out.println("Превышен лимит запросов. Ожидание " + waitTime + " миллисекунд.");
 
             try {
-                TimeUnit.MILLISECONDS.sleep(waitTime);
+                TimeUnit.MILLISECONDS.sleep(waitTime); // Wait for the calculated time
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                Thread.currentThread().interrupt(); // Restore the interrupted status
             }
 
-            // Сбрасываем счетчик и обновляем время начала окна
-            requestCount.set(0);
-            windowStartTime = System.currentTimeMillis();
+            // Reset the counter and update the window start time after waiting
+            requestCount.set(0); // Reset the request counter
+            windowStartTime = System.currentTimeMillis(); // Update the start time for the new window
         }
 
-        requestCount.incrementAndGet();
+        requestCount.incrementAndGet(); // Increment the request counter
     }
 }
