@@ -9,91 +9,84 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 public class CoinGeckoApiClient {
+    // Base URL for the CoinGecko API
     private static final String BASE_URL = "https://api.coingecko.com/api/v3";
-    private OkHttpClient client = new OkHttpClient();
-    private Gson gson = new Gson();
+    private OkHttpClient client = new OkHttpClient(); // HTTP client for making requests
+    private Gson gson = new Gson(); // Gson instance for JSON parsing
 
-    // Создаем RateLimiter с лимитом 9 запросов в 60 секунд (1 минута)
-    private static final int MAX_REQUESTS_PER_MINUTE = 1;
-    private static final long TIME_WINDOW_MILLIS = 15_000L; // 60 секунд
-    private RateLimiter rateLimiter = new RateLimiter(MAX_REQUESTS_PER_MINUTE, TIME_WINDOW_MILLIS);
+    // Create a RateLimiter with a limit of 1 request every 15 seconds
+    private static final int MAX_REQUESTS_PER_MINUTE = 1; //Maximum requests per minute
+    private static final long TIME_WINDOW_MILLIS = 15_000L; // Time window in milliseconds (15 seconds)
+    private RateLimiter rateLimiter = new RateLimiter(MAX_REQUESTS_PER_MINUTE, TIME_WINDOW_MILLIS); // Rate limiter instance
 
-    /**
-     * Получает данные топ N криптовалют по рыночной капитализации с их идентификаторами и названиями
-     *
-     * @param limit количество криптовалют для получения
-     * @return список карт с данными криптовалют (id и name)
-     * @throws IOException если произошла ошибка при выполнении запроса
-     */
+
     public List<Map<String, String>> getTopCoinsData(int limit) throws IOException {
-        // Используем RateLimiter перед выполнением запроса
+        // Use RateLimiter before executing the request
         rateLimiter.acquire();
 
+        // Construct the URL for the API request
         String url = BASE_URL + "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=" + limit + "&page=1&sparkline=false";
-        Request request = new Request.Builder().url(url).build();
+        Request request = new Request.Builder().url(url).build(); // Build the request
 
-        try (Response response = client.newCall(request).execute()) {
+        try (Response response = client.newCall(request).execute()) { // Execute the request and obtain the response
             if (!response.isSuccessful()) {
-                throw new IOException("Ошибка при запросе данных: " + response);
+                throw new IOException("Ошибка при запросе данных: " + response); // Throw an exception if the response is not successful
             }
 
-            String jsonResponse = response.body().string();
+            String jsonResponse = response.body().string(); // Convert the response body to a string
 
+            // Define the type for deserializing the JSON response
             Type listType = new TypeToken<List<Map<String, Object>>>() {}.getType();
-            List<Map<String, Object>> coinsData = gson.fromJson(jsonResponse, listType);
+            List<Map<String, Object>> coinsData = gson.fromJson(jsonResponse, listType);  // Deserialize JSON into a list of maps
 
-            List<Map<String, String>> coinList = new ArrayList<>();
-            for (Map<String, Object> coin : coinsData) {
-                String id = (String) coin.get("id");
-                String name = (String) coin.get("name");
-                Map<String, String> coinInfo = new HashMap<>();
-                coinInfo.put("id", id);
-                coinInfo.put("name", name);
-                coinList.add(coinInfo);
+            List<Map<String, String>> coinList = new ArrayList<>(); // Initialize a list to hold the coin data
+            for (Map<String, Object> coin : coinsData) { // Iterate through the coins data
+                String id = (String) coin.get("id"); // Get the coin ID
+                String name = (String) coin.get("name"); // Get the coin name
+                Map<String, String> coinInfo = new HashMap<>(); // Create a new map for coin info
+                coinInfo.put("id", id); // Add the ID to the map
+                coinInfo.put("name", name); // Add the name to the map
+                coinList.add(coinInfo); // Add the coin info map to the list
             }
 
-            return coinList;
+            return coinList; // Return the list of coin data
         }
     }
 
-    /**
-     * Получает историю цен закрытия криптовалюты за последние N дней
-     *
-     * @param coinId идентификатор криптовалюты (например, "bitcoin")
-     * @param days   количество дней для получения данных
-     * @return список объектов PriceData с датой и ценой
-     * @throws IOException если произошла ошибка при выполнении запроса
-     */
+
     public List<PriceData> getClosingPrices(String coinId, int days) throws IOException {
-        // Используем RateLimiter перед выполнением запроса
+        // Use RateLimiter before executing the request
         rateLimiter.acquire();
 
+        // Construct the URL for the API request
         String url = BASE_URL + "/coins/" + coinId + "/market_chart?vs_currency=usd&days=" + days + "&interval=daily";
-        Request request = new Request.Builder().url(url).build();
+        Request request = new Request.Builder().url(url).build(); // Build the request
 
-        try (Response response = client.newCall(request).execute()) {
+        try (Response response = client.newCall(request).execute()) { // Execute the request and obtain the response
             if (!response.isSuccessful()) {
-                throw new IOException("Ошибка при запросе данных: " + response);
+                throw new IOException("Ошибка при запросе данных: " + response); // Throw an exception if the response is not successful
             }
 
-            String jsonResponse = response.body().string();
+            String jsonResponse = response.body().string(); // Convert the response body to a string
 
+            // Define the type for deserializing the JSON response
             Type type = new TypeToken<Map<String, List<List<Double>>>>() {}.getType();
-            Map<String, List<List<Double>>> marketData = gson.fromJson(jsonResponse, type);
+            Map<String, List<List<Double>>> marketData = gson.fromJson(jsonResponse, type); // Deserialize JSON into a map
 
-            List<List<Double>> prices = marketData.get("prices");
-            List<PriceData> closingPrices = new ArrayList<>();
 
-            for (List<Double> pricePoint : prices) {
-                long timestamp = pricePoint.get(0).longValue();
-                double price = pricePoint.get(1);
+            List<List<Double>> prices = marketData.get("prices"); // Get the list of prices from the market data
+            List<PriceData> closingPrices = new ArrayList<>(); // Initialize a list to hold closing prices
 
-                // Конвертируем timestamp в дату
-                Date date = new Date(timestamp);
-                closingPrices.add(new PriceData(date, price));
+            for (List<Double> pricePoint : prices) { // Iterate through the price points
+                long timestamp = pricePoint.get(0).longValue(); // Get the timestamp
+                double price = pricePoint.get(1); // Get the price
+
+                // Convert timestamp to date
+                Date date = new Date(timestamp); // Create a new Date object from the timestamp
+                closingPrices.add(new PriceData(date, price)); // Add the price data to the list
             }
 
-            return closingPrices;
+            return closingPrices; // Return the list of closing prices
         }
     }
 }
