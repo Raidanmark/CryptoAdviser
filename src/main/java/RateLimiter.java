@@ -5,7 +5,7 @@ public class RateLimiter {
     private final int maxRequests; // Maximum number of requests allowed in the time window
     private final long timeWindowMillis; // Time window in milliseconds for the rate limit
     private long windowStartTime; // Start time of the current time window
-    private AtomicInteger requestCount; // Counter for the number of requests made in the current time window
+    private final AtomicInteger requestCount; // Counter for the number of requests made in the current time window
 
     // Creates a new rate limiter for requests
     public RateLimiter(int maxRequests, long timeWindowMillis) {

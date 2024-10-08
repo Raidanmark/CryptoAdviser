@@ -3,7 +3,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+//import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +28,7 @@ public class BotListener extends ListenerAdapter {
             // Create instances of API client and analyzer
             CoinGeckoApiClient apiClient = new CoinGeckoApiClient();
             CryptoAnalyzer analyzer = new CryptoAnalyzer();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             // Create a new thread to perform the analysis
             new Thread(() -> {
@@ -84,7 +84,7 @@ public class BotListener extends ListenerAdapter {
                             channel.sendMessage("No recommendations for purchasing at the moment.").queue();
                         } else {
                             // Otherwise, send the recommendations to the channel
-                            channel.sendMessage("Purchase recommendations:\n" + recommendation.toString()).queue();
+                            channel.sendMessage("Purchase recommendations:\n" + recommendation).queue();
                         }
                     }
                 } catch (IOException e) {

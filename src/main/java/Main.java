@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import io.github.cdimascio.dotenv.Dotenv; // Импорт библиотеки dotenv
 
 public class Main {
-    public static void main(String[] args) throws LoginException {
+    public static void main(String[] args) {
 
         Dotenv dotenv = Dotenv.configure().filename("Secret.env").load();
         String token = dotenv.get("DISCORD_TOKEN"); // Get Discord Bot Token from env

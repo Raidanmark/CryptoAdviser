@@ -1,8 +1,8 @@
 import java.util.Date;
 
 public class PriceData {
-    private Date date;  // Variable to store the date of the price data
-    private double price; // Variable to store the price value
+    private final Date date;  // Variable to store the date of the price data
+    private final double  price; // Variable to store the price value
 
     // Constructor to initialize PriceData with date and price
     public PriceData(Date date, double price) {

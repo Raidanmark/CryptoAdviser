@@ -4,7 +4,7 @@ import java.util.List;
 
 public class CryptoAnalyzer {
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Date format for output
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Date format for output
 
     //Analyzes the cryptocurrency for a "golden cross"
     public String analyze(String coinId, List<PriceData> priceDataList) {
