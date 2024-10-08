@@ -15,6 +15,6 @@ public class Main {
                 .addEventListeners(new BotListener()) //Allows to handle events
                 .build(); //Bot launch
 
-        System.out.println("Бот успешно запущен!"); // Indicator that bot started
+        System.out.println("Bot successfully launched!"); // Indicator that bot started
     }
 }
