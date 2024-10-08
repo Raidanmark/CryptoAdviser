@@ -4,120 +4,103 @@ import java.util.List;
 
 public class CryptoAnalyzer {
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Date format for output
 
-    /**
-     * Анализирует криптовалюту на наличие "золотого креста"
-     *
-     * @param coinId        идентификатор криптовалюты
-     * @param priceDataList список объектов PriceData (дата и цена)
-     * @return рекомендация по покупке или информация об отсутствии сигнала
-     */
+    //Analyzes the cryptocurrency for a "golden cross"
     public String analyze(String coinId, List<PriceData> priceDataList) {
-        int shortPeriod = 20; // Краткосрочная SMA (5 дней)
-        int longPeriod = 50; // Долгосрочная SMA (20 дней)
+        int shortPeriod = 20; // Short-term SMA (20 days)
+        int longPeriod = 50; // Long-term SMA (50 days)
 
-        System.out.println("\nНачало анализа для " + coinId);
+        System.out.println("\nStarting analysis for  " + coinId);
 
-        // Проверяем, достаточно ли данных для расчета долгосрочной SMA
+        // Check if there is enough data to calculate the long-term SMA
         if (priceDataList.size() < longPeriod) {
-            System.out.println("Недостаточно данных для анализа " + coinId + ". Требуется как минимум " + longPeriod + " дней данных.");
-            return "Недостаточно данных для анализа " + coinId + ".";
+            System.out.println("Insufficient data for analysis of " + coinId + ". At least " + longPeriod + " days of data are required.");
+            return "Insufficient data for analysis of " + coinId + ".";
         }
 
-        List<Double> shortSMAList = new ArrayList<>();
-        List<Double> longSMAList = new ArrayList<>();
+        List<Double> shortSMAList = new ArrayList<>(); // List to store short-term SMA values
+        List<Double> longSMAList = new ArrayList<>();  // List to store long-term SMA values
 
-        // Рассчитываем скользящие средние для каждого периода
+        // Calculate moving averages for each period
         for (int i = longPeriod - 1; i < priceDataList.size(); i++) {
-            // Получаем цены для краткосрочной и долгосрочной SMA
-            List<Double> shortClosingPrices = new ArrayList<>();
-            List<String> shortDates = new ArrayList<>();
+            // Get prices for short-term and long-term SMA
+            List<Double> shortClosingPrices = new ArrayList<>();  // List for short-term closing prices
+            List<String> shortDates = new ArrayList<>(); // List for short-term dates
             for (int j = i - shortPeriod + 1; j <= i; j++) {
-                shortClosingPrices.add(priceDataList.get(j).getPrice());
-                shortDates.add(dateFormat.format(priceDataList.get(j).getDate()));
+                shortClosingPrices.add(priceDataList.get(j).getPrice()); // Add closing price to the list
+                shortDates.add(dateFormat.format(priceDataList.get(j).getDate())); // Add formatted date to the list
             }
 
-            List<Double> longClosingPrices = new ArrayList<>();
-            List<String> longDates = new ArrayList<>();
+            List<Double> longClosingPrices = new ArrayList<>(); // List for long-term closing prices
+            List<String> longDates = new ArrayList<>(); // List for long-term dates
             for (int j = i - longPeriod + 1; j <= i; j++) {
-                longClosingPrices.add(priceDataList.get(j).getPrice());
-                longDates.add(dateFormat.format(priceDataList.get(j).getDate()));
+                longClosingPrices.add(priceDataList.get(j).getPrice()); // Add closing price to the list
+                longDates.add(dateFormat.format(priceDataList.get(j).getDate())); // Add formatted date to the list
             }
 
-            // Рассчитываем SMA
-            double shortSMA = calculateSMA(shortClosingPrices);
-            double longSMA = calculateSMA(longClosingPrices);
+            // Calculate SMA
+            double shortSMA = calculateSMA(shortClosingPrices); // Calculate short-term SMA
+            double longSMA = calculateSMA(longClosingPrices); // Calculate long-term SMA
 
-            shortSMAList.add(shortSMA);
-            longSMAList.add(longSMA);
+            shortSMAList.add(shortSMA); // Add short-term SMA to the list
+            longSMAList.add(longSMA); // Add long-term SMA to the list
 
-            // Выводим промежуточные расчеты
-            System.out.println("\nДата: " + dateFormat.format(priceDataList.get(i).getDate()));
-            System.out.println("Краткосрочные цены (" + shortPeriod + " дней): " + shortClosingPrices);
-            System.out.println("Краткосрочная SMA: " + shortSMA);
+            // Print intermediate calculations
+            System.out.println("\nDate: " + dateFormat.format(priceDataList.get(i).getDate()));
+            System.out.println("Short-term prices (" + shortPeriod + " days): " + shortClosingPrices);
+            System.out.println("Short-term SMA: " + shortSMA);
 
-            System.out.println("Долгосрочные цены (" + longPeriod + " дней): " + longClosingPrices);
-            System.out.println("Долгосрочная SMA: " + longSMA);
+            System.out.println("Long-term prices (" + longPeriod + " days): " + longClosingPrices);
+            System.out.println("Long-term SMA: " + longSMA);
         }
 
-        // Проверяем наличие "золотого креста"
+        // Check for the presence of a "golden cross"
         boolean goldenCross = isGoldenCross(shortSMAList, longSMAList);
 
         if (goldenCross) {
-            System.out.println("\nОбнаружен \"золотой крест\" для " + coinId + "!");
-            return "Рекомендуется купить " + coinId + ". Обнаружено пересечение скользящих средних (\"золотой крест\").";
+            System.out.println("\nA \"golden cross\" has been detected for" + coinId + "!");
+            return "Recommended to buy " + coinId + ". A moving average crossover (\"golden cross\") was detected.";
         } else {
-            System.out.println("\n\"Золотой крест\" не обнаружен для " + coinId + ".");
-            return "Нет сигнала на покупку для " + coinId + ".";
+            System.out.println("\nNo \"golden cross\" detected for " + coinId + ".");
+            return "No buy signal for " + coinId + ".";
         }
     }
 
-    /**
-     * Рассчитывает простую скользящую среднюю (SMA)
-     *
-     * @param prices список цен для расчета SMA
-     * @return значение SMA
-     */
+    // Calculates the simple moving average (SMA)
     private double calculateSMA(List<Double> prices) {
-        double sum = 0.0;
+        double sum = 0.0; // Variable to hold the sum of prices
         for (Double price : prices) {
-            sum += price;
+            sum += price; // Accumulate the sum of prices
         }
-        return sum / prices.size();
+        return sum / prices.size();  // Return the average
     }
 
-    /**
-     * Проверяет наличие "золотого креста" на основе краткосрочной и долгосрочной SMA
-     *
-     * @param shortSMAList список значений краткосрочной SMA
-     * @param longSMAList  список значений долгосрочной SMA
-     * @return true, если "золотой крест" обнаружен, иначе false
-     */
+    //Checks for the presence of a "golden cross" based on short-term and long-term SMA
     private boolean isGoldenCross(List<Double> shortSMAList, List<Double> longSMAList) {
-        int size = shortSMAList.size();
-        if (size < 2) return false;
+        int size = shortSMAList.size();  // Get the size of the short SMA list
+        if (size < 2) return false; // Not enough data to determine a golden cross
 
-        // Предыдущие значения SMA
-        double prevShortSMA = shortSMAList.get(size - 2);
-        double prevLongSMA = longSMAList.get(size - 2);
+        // Previous SMA values
+        double prevShortSMA = shortSMAList.get(size - 2); // Previous short-term SMA
+        double prevLongSMA = longSMAList.get(size - 2); // Previous long-term SMA
 
-        // Текущие значения SMA
-        double currShortSMA = shortSMAList.get(size - 1);
-        double currLongSMA = longSMAList.get(size - 1);
+        // Current SMA values
+        double currShortSMA = shortSMAList.get(size - 1); // Current short-term SMA
+        double currLongSMA = longSMAList.get(size - 1); // Current long-term SMA
 
-        System.out.println("\nПроверка на \"золотой крест\":");
-        System.out.println("Предыдущая краткосрочная SMA: " + prevShortSMA);
-        System.out.println("Предыдущая долгосрочная SMA: " + prevLongSMA);
-        System.out.println("Текущая краткосрочная SMA: " + currShortSMA);
-        System.out.println("Текущая долгосрочная SMA: " + currLongSMA);
+        System.out.println("\nChecking for a \"golden cross\":");
+        System.out.println("Previous short-term SMA: " + prevShortSMA);
+        System.out.println("Previous long-term SMA: " + prevLongSMA);
+        System.out.println("Current short-term SMA: " + currShortSMA);
+        System.out.println("Current long-term SMA: " + currLongSMA);
 
-        // Проверяем условия "золотого креста"
+        // Check for "golden cross" conditions
         boolean goldenCross = (prevShortSMA <= prevLongSMA) && (currShortSMA > currLongSMA);
 
-        System.out.println("Условие \"золотого креста\" выполнено: " + goldenCross);
+        System.out.println("Golden cross condition met: " + goldenCross);
 
-        return goldenCross;
+        return goldenCross; // Return the result of the golden cross check
     }
 }
 
