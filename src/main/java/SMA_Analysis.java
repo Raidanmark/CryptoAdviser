@@ -2,7 +2,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CryptoAnalyzer {
+public class SMA_Analysis {
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Date format for output
 

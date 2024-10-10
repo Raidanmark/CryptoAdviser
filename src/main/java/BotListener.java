@@ -27,7 +27,7 @@ public class BotListener extends ListenerAdapter {
 
             // Create instances of API client and analyzer
             CoinGeckoApiClient apiClient = new CoinGeckoApiClient();
-            CryptoAnalyzer analyzer = new CryptoAnalyzer();
+            SMA_Analysis analyzer = new SMA_Analysis();
             //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             // Create a new thread to perform the analysis

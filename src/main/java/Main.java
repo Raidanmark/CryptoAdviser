@@ -1,6 +1,5 @@
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import io.github.cdimascio.dotenv.Dotenv; // Импорт библиотеки dotenv
 
