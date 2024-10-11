@@ -1,4 +1,4 @@
-package Bot;
+package Bot.Bot;
 
 
 public class Main {

@@ -1,4 +1,4 @@
-package Bot;
+package Bot.Data;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -16,14 +16,14 @@ public class CoinGeckoApiClient {
     private final OkHttpClient client = new OkHttpClient(); // HTTP client for making requests
     private final Gson gson = new Gson(); // Gson instance for JSON parsing
 
-    // Create a Bot.RateLimiter with a limit of 1 request every 15 seconds
+    // Create a Bot.Data.RateLimiter with a limit of 1 request every 15 seconds
     private static final int MAX_REQUESTS_PER_MINUTE = 1; //Maximum requests per minute
     private static final long TIME_WINDOW_MILLIS = 15_000L; // Time window in milliseconds (15 seconds)
     private final RateLimiter rateLimiter = new RateLimiter(MAX_REQUESTS_PER_MINUTE, TIME_WINDOW_MILLIS); // Rate limiter instance
 
 
     public List<Map<String, String>> getTopCoinsData(int limit) throws IOException {
-        // Use Bot.RateLimiter before executing the request
+        // Use Bot.Data.RateLimiter before executing the request
         rateLimiter.acquire();
 
 
@@ -56,9 +56,10 @@ public class CoinGeckoApiClient {
         }
     }
 
+    // Create a new thread to perform the analysis (it will be in next updates)
 
     public List<PriceData> getClosingPrices(String coinId, int days) throws IOException {
-        // Use Bot.RateLimiter before executing the request
+        // Use Bot.Data.RateLimiter before executing the request
         rateLimiter.acquire();
 
         // Construct the URL for the API request

@@ -1,9 +1,9 @@
-package Bot;
+package Bot.Bot;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class Config {
-    private Dotenv dotenv;
+    private final Dotenv dotenv;
 
     //Method to upload .env file
     public Config() {
