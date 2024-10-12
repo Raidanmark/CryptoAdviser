@@ -1,5 +1,5 @@
 
-Crypto Advisor
+**Crypto Advisor**
 
 This Discord bot is designed for cryptocurrency analysis using data from the CoinGecko API. Its main goal is to help users identify potential investment opportunities based on a technical indicator called the "golden cross."
 
