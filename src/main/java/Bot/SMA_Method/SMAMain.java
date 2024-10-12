@@ -32,18 +32,11 @@ public class SMAMain {
         //Call closing price data
         closingPrices = dataFetcher.GetClosingPrice(topCoinList, TopCoinsListLang, DaysAmount);
 
-
-        //Call closing price data Console output
-
         //Call Data analysis
         SMA_Analysis analyzer = new SMA_Analysis();
         SMARecommendation = analyzer.analyze(topCoinList, closingPrices);
 
-        //Call Data analysis Console output
-
-
         return SMARecommendation;
     }
-
 
 }

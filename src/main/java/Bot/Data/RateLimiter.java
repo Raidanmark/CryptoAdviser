@@ -30,7 +30,7 @@ public class RateLimiter {
         if (requestCount.get() >= maxRequests) {
             // Calculate the wait time until the next window starts
             long waitTime = timeWindowMillis - (currentTime - windowStartTime);
-            System.out.println("Превышен лимит запросов. Ожидание " + waitTime + " миллисекунд.");
+            System.out.println("Request limit exceeded. Waiting " + waitTime + " milliseconds.");
 
             try {
                 TimeUnit.MILLISECONDS.sleep(waitTime); // Wait for the calculated time
