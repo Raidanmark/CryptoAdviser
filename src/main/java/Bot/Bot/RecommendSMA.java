@@ -5,7 +5,6 @@ import Bot.SMA_Method.SMAMain;
 
 public class RecommendSMA {
 
-
    public void Recommendsma(MessageChannelUnion channel) {
       // Send a message to the channel indicating that analysis is in progress
       channel.sendMessage("Please wait, analyzing top cryptocurrencies. This may take a few minutes...").queue();

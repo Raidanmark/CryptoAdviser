@@ -68,7 +68,7 @@ public class CoinGeckoApiClient {
 
         try (Response response = client.newCall(request).execute()) { // Execute the request and obtain the response
             if (!response.isSuccessful()) {
-                throw new IOException("Ошибка при запросе данных: " + response); // Throw an exception if the response is not successful
+                throw new IOException("\n" + "Error requesting data: " + response); // Throw an exception if the response is not successful
             }
 
             String jsonResponse = response.body().string(); // Convert the response body to a string

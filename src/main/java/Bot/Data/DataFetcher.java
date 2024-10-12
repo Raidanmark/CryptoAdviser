@@ -1,26 +1,17 @@
 package Bot.Data;
 
 import Bot.SMA_Method.SMA_Analysis;
-import Bot.Data.PriceData;
-
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
-
-
 
 public class DataFetcher {
 
     // Create instances of API client and analyzer
     CoinGeckoApiClient apiClient = new CoinGeckoApiClient();
     SMA_Analysis analyzer = new SMA_Analysis();
-
 
     public List<String> TopCrypto(Integer TopCoinsListLang) {
         List<String> idList = new ArrayList<>();
@@ -42,22 +33,15 @@ public class DataFetcher {
         return idList;
     }
 
-
-
-
     public List<List<PriceData>> GetClosingPrice(List<String> topCoinsData, Integer TopCoinsListLang, Integer DaysAmount) {
         List<List<PriceData>> closingPrices = new ArrayList<>();
 
          int totalCoins = TopCoinsListLang; // Get the total number of coins
          int currentCoinIndex = 1; // Initialize the current coin index
 
-
         //Data Fetcher
         // For each cryptocurrency, get the closing price history and perform analysis
         for (String coinId : topCoinsData) {
-            //System.out.println("\nAnalyzing cryptocurrency " + currentCoinIndex + " из " + totalCoins + ": " + coinId);
-            //Console output Analyzing cryptocurrency
-
 
             try {
                 // Get closing prices with dates
@@ -74,18 +58,6 @@ public class DataFetcher {
 
         return closingPrices;
     }
-/*)
-
- // In return from SMA_Method to SMAMain should be List of coins
-            currentCoinIndex++; // Increment the current coin index
-
-
- */
-
-
-
-
-
 
 }
 
