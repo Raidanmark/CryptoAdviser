@@ -18,7 +18,7 @@ public class CoinGeckoApiClient {
 
     // Create a Bot.Data.RateLimiter with a limit of 1 request every 15 seconds
     private static final int MAX_REQUESTS_PER_MINUTE = 1; //Maximum requests per minute
-    private static final long TIME_WINDOW_MILLIS = 15_000L; // Time window in milliseconds (15 seconds)
+    private static final long TIME_WINDOW_MILLIS = 8_000L; // Time window in milliseconds (15 seconds)
     private final RateLimiter rateLimiter = new RateLimiter(MAX_REQUESTS_PER_MINUTE, TIME_WINDOW_MILLIS); // Rate limiter instance
 
 
