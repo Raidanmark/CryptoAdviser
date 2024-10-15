@@ -21,10 +21,10 @@ jobs:
           key: ${{ secrets.SSH_FOR_SERVER }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
-      # Завершение старого процесса Java
+      # Завершение всех процессов Java
       - name: Stop old Java process
         run: |
-          ssh root@49.13.2.245 "pkill -f 'java -jar' || true"
+           ssh root@49.13.2.245 "ps aux | grep 'java -jar' | grep -v grep | awk '{print $2}' | xargs -r kill -9"
 
       # Обновление репозитория на сервере через git pull
       - name: Update project from GitHub on server
