@@ -1,0 +1,24 @@
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Добавление SSH-ключа для подключения к серверу
+      - name: Add SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Используем секрет SSH ключа
+          known_hosts: server-ip  # Замените на IP-адрес или доменное имя вашего сервера
+
+      # Копирование файла на сервер через SCP
+      - name: Deploy to server
+        run: |
+          scp target/твой-проект-shaded.jar user@server-ip:/path/to/deploy/
+
+      # Запуск приложения на сервере через SSH
+      - name: Run application on server
+        run: |
+          ssh user@server-ip 'cd /path/to/deploy && nohup java -jar твой-проект-shaded.jar &'
