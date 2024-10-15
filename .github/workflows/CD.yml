@@ -1,24 +1,37 @@
+name: Auto Deploy to Server
+
+on:
+  push:
+    branches:
+      - main  # Запускать деплой при каждом пуше в main
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # Проверка кода
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Добавление SSH-ключа для подключения к серверу
+      # Добавление SSH ключа для подключения к серверу
       - name: Add SSH key
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.SSH_FOR_SERVER }}  # Используем правильное имя секрета
-          known_hosts: server-ip  # Замените на IP-адрес или доменное имя вашего сервера
+          key: ${{ secrets.SSH_FOR_SERVER }}  # Используй свой секретный ключ
+          known_hosts: 49.13.2.245  # IP адрес твоего сервера
 
-      # Копирование файла на сервер через SCP
-      - name: Deploy to server
+      # Завершение старого процесса
+      - name: Stop old Java process
         run: |
-          scp target/твой-проект-shaded.jar user@server-ip:/path/to/deploy/
+          ssh user@49.13.2.245 "pkill -f 'java -jar' || true"
 
-      # Запуск приложения на сервере через SSH
-      - name: Run application on server
+      # Копирование нового JAR файла на сервер
+      - name: Copy new JAR to server
         run: |
-          ssh user@server-ip 'cd /path/to/deploy && nohup java -jar твой-проект-shaded.jar &'
+          scp target/your-app.jar user@49.13.2.245:/path/to/deploy/
+
+      # Запуск новой версии приложения
+      - name: Start new application
+        run: |
+          ssh user@49.13.2.245 "nohup java -jar /path/to/deploy/your-app.jar > /path/to/deploy/your-app.log 2>&1 &"
