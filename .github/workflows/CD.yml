@@ -24,7 +24,7 @@ jobs:
       # Завершение всех процессов Java
       - name: Stop old Java process
         run: |
-           ssh root@49.13.2.245 "ps aux | grep 'java -jar' | grep -v grep | awk '{print $2}' | xargs -r kill -9"
+          ssh root@49.13.2.245 "ps aux | grep '[j]ava -jar' | awk '{print \$2}' | xargs -r kill -9"
 
       # Обновление репозитория на сервере через git pull
       - name: Update project from GitHub on server
