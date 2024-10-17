@@ -44,12 +44,9 @@ jobs:
       # Запуск новой версии приложения с логами
       - name: Start new application
         run: |
-          ssh root@49.13.2.245 "nohup java -jar /root/CryptoAdvisor/target/Cryptoadvises1.1-1.0-SNAPSHOT.jar > /root/CryptoAdvisor/target/app.log 2>&1 &"
+          ssh root@49.13.2.245 " cd /root/CryptoAdvisor && nohup java -jar /target/Cryptoadvises1.1-1.0-SNAPSHOT.jar &"
 
-      # Проверка, что приложение запущено и логи созданы
-      - name: Check application logs
-        run: |
-          ssh root@49.13.2.245 "tail -n 20 /root/CryptoAdvisor/target/app.log"
+   
 
 
 
