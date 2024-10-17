@@ -31,10 +31,10 @@ jobs:
         run: |
           ssh root@49.13.2.245 "cd /root/CryptoAdvisor && git pull origin main"
 
-      # Создание файла Secret.env на сервере с использованием GitHub Secrets
+      # Загрузка на сервер токена дискорда
       - name: Create Secret.env file on server
         run: |
-          ssh root@49.13.2.245 "echo 'DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}' > /root/CryptoAdvisor/src/main/java/resources/Secret.env"
+          scp -r /Users/rajderonisenko/Desktop/Secret.env root@49.13.2.245:/root/CryptoAdvisor/src/main/java/resources/Secret.env
       
 
         # Выполнение Maven сборки (clean package)
