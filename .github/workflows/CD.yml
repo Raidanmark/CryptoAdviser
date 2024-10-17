@@ -29,15 +29,7 @@ jobs:
       # Обновление репозитория на сервере через git pull
       - name: Update project from GitHub on server
         run: |
-          ssh root@49.13.2.245 "cd /root/CryptoAdvisor && git pull origin main"
-
-      # Загрузка на сервер токена дискорда
-      - name: Copy file to server
-        run: |
-          scp -o StrictHostKeyChecking=no /Users/Shared/Secret.env root@49.13.2.245:/root/CryptoAdvisor/src/main/java/resources/
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      
+          ssh root@49.13.2.245 "cd /root/CryptoAdvisor && git pull origin main"      
 
         # Выполнение Maven сборки (clean package)
       - name: Build project using Maven
