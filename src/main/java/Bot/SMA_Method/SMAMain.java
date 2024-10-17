@@ -8,7 +8,7 @@ import Bot.Data.PriceData;
 public class SMAMain {
 
     //Amount of top coins
-    private final Integer TopCoinsListLang = 5;
+    private final Integer TopCoinsListLang = 1;
     //Amount of days logs
     private final Integer DaysAmount = 50;
 
